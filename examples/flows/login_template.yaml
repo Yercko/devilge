@@ -1,0 +1,19 @@
+# Template Maestro flow for a typical login screen.
+#
+# Parameterized via env vars: pass {"EMAIL": "...", "PASSWORD": "..."} when
+# invoking devilge_run_maestro_flow.
+#
+# Adjust selectors (Email, Password, Sign in) to match your app's visible text
+# or replace them with `id:` references against your testTags.
+appId: REPLACE_WITH_YOUR_APP_ID
+---
+- launchApp:
+    clearState: true
+- tapOn: "Email"
+- inputText: ${EMAIL}
+- tapOn: "Password"
+- inputText: ${PASSWORD}
+- tapOn: "Sign in"
+- assertVisible:
+    text: ".*"
+    timeout: 15000

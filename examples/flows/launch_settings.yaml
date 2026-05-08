@@ -1,0 +1,15 @@
+# Sample Maestro flow shipped with devilge as a working reference.
+#
+# To use against your own project:
+#   1. Copy this file (or any flow you write) into <DEVILGE_FLOWS_ROOT>,
+#      which defaults to `<your-android-project>/devilge-flows/`.
+#   2. Adjust `appId` to your application id, e.g. `com.example.app`.
+#   3. Invoke devilge_run_maestro_flow with `{"name": "launch_settings"}`.
+#
+# This flow targets the system Settings app, which exists on every emulator,
+# so you can validate Maestro integration without your app installed.
+appId: com.android.settings
+---
+- launchApp:
+    clearState: false
+- assertVisible: ".*"

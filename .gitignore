@@ -1,0 +1,22 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.local
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.tsbuildinfo
+
+# Runtime artefacts that may end up under devilge during local development.
+.devilge-outputs/
+bootstrap.log
+
+# Personal notes — not for publication.
+LAUNCH_CHECKLIST.md
+NOTES.md
+TODO.md
+
+# Internal design docs — kept locally for reference, not published.
+docs/internal/
