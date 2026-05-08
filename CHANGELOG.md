@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-05-08
+
+### Fixed
+
+- `dist/index.js` is now made executable during build (`chmod +x`). Without this,
+  `npx -y devilge` from a clean install failed with `Permission denied` because
+  TypeScript's compiler does not preserve the executable bit.
+
 ## [0.1.0] - 2026-05-08
 
 Initial public release.
@@ -40,4 +48,5 @@ Initial public release.
 
 - 202 unit tests covering parsers, sanitizers, use cases, and adapters.
 
+[0.1.1]: https://github.com/yercko/devilge/releases/tag/v0.1.1
 [0.1.0]: https://github.com/yercko/devilge/releases/tag/v0.1.0
