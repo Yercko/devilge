@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2026-05-09
+
+### Documentation
+
+- Added a demo GIF (`docs/video.gif`) to `README.md` showing devilge in action.
+- Fixed the tool count claim in the Claude Desktop setup section (was `31`, should
+  be `33`) so it matches the count stated in the project description.
+- Cleaned up the "What's inside" table: corrected the `Project static` count from
+  `(6)` to `(3)` (build-result parsers are part of `run_gradle_task`, not separate
+  tools); fixed a typo (`list_compose_previews_tree` → `get_compose_previews_tree`);
+  removed the duplicate `Misc` row that listed the same preview-tree tool twice.
+- Bumped advertised server version (`McpServer` constructor) to `0.2.3` to match
+  `package.json` and `server.json`.
+
 ## [0.2.2] - 2026-05-09
 
 ### Fixed

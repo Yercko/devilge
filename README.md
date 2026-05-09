@@ -13,13 +13,12 @@
 | Category | Tools | Purpose |
 | --- | --- | --- |
 | **Device read** (8) | `list_devices`, `get_logcat`, `get_app_errors`, `inspect_packages`, `resize_logcat_buffer`, `get_network_calls`, `get_compose_preview_source`, `list_compose_previews` | Observe device + project state |
-| **Project static** (6) | `get_project_structure`, `list_compose_previews_tree`, `run_gradle_task`, plus build-result parsers (kotlinc/javac/ksp errors, JUnit XML, Lint XML) | Inspect Gradle/KMM project + run any Gradle task |
+| **Project static** (3) | `get_project_structure`, `get_compose_previews_tree`, `run_gradle_task` (the latter wraps build-result parsers for kotlinc/javac/ksp errors, JUnit XML, Lint XML) | Inspect Gradle/KMM project + run any Gradle task |
 | **Device drive** (7) | `take_screenshot`, `dump_ui`, `input_tap`, `input_text`, `input_key`, `input_swipe`, `set_input_visualization` | Manipulate the running app |
 | **Locators + waits** (6) | `tap_text`, `tap_resource_id`, `set_text`, `wait_for_text`, `wait_for_resource_id`, `wait_for_idle` | Semantic UI navigation, no coordinate magic |
 | **Lifecycle** (5) | `launch_app`, `force_stop_app`, `clear_app_data`, `install_apk`, `run_instrumented_tests` | Cold-start app, run Espresso tests, fast install |
 | **Maestro flows (optional)** (3) | `run_maestro_flow`, `list_maestro_flows`, `validate_maestro_flow` | Reusable YAML flows for recurring navigation |
 | **Composition** (1) | `batch` | Chain multiple devilge tools in one round trip |
-| **Misc** (1) | `get_compose_previews_tree` (hierarchical) | — |
 
 215 unit tests in Vitest, all green. Strict TypeScript (`strict`, `noUncheckedIndexedAccess`).
 
@@ -128,7 +127,7 @@ Add an entry to your `claude_desktop_config.json` (path varies by OS):
 }
 ```
 
-Restart Claude Desktop. The 31 tools should appear in the tool picker.
+Restart Claude Desktop. The 33 tools should appear in the tool picker.
 
 ### Local smoke test (MCP Inspector)
 
