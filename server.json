@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.yercko/devilge",
-  "description": "MCP server that exposes Android/KMM project insights to AI assistants like Claude: logcat, app errors, ADB device control, Jetpack Compose previews, project structure, OkHttp/Ktor network capture, optional Maestro flow runner.",
+  "name": "io.github.Yercko/devilge",
+  "description": "Android/KMM MCP server: logcat, ADB device control, Compose previews, network, Maestro flows.",
   "repository": {
-    "url": "https://github.com/yercko/devilge",
+    "url": "https://github.com/Yercko/devilge",
     "source": "github"
   },
-  "version": "0.2.1",
+  "version": "0.2.2",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "devilge",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "transport": {
         "type": "stdio"
       },

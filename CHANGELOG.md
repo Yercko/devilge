@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-05-09
+
+### Fixed
+
+- Use exact GitHub username casing (`io.github.Yercko/devilge`) in `mcpName`
+  and `server.json#name`. The MCP Registry requires the namespace prefix to
+  match the authenticated GitHub user's literal handle (case-sensitive);
+  lowercase versions are rejected with `403 Forbidden`. Republished to npm so
+  the verification marker on the package matches the registry submission.
+- Shortened `server.json#description` to ≤100 characters to satisfy the
+  registry's validation limit (the previous longer description was rejected
+  with `422 Unprocessable Entity`).
+
 ## [0.2.1] - 2026-05-09
 
 ### Changed
@@ -88,6 +101,7 @@ Initial public release.
 
 - 202 unit tests covering parsers, sanitizers, use cases, and adapters.
 
+[0.2.2]: https://github.com/Yercko/devilge/releases/tag/v0.2.2
 [0.2.1]: https://github.com/yercko/devilge/releases/tag/v0.2.1
 [0.2.0]: https://github.com/yercko/devilge/releases/tag/v0.2.0
 [0.1.1]: https://github.com/yercko/devilge/releases/tag/v0.1.1
