@@ -3,7 +3,7 @@
   "name": "io.github.yercko/devilge",
   "description": "MCP server that exposes Android/KMM project insights to AI assistants like Claude: logcat, app errors, ADB device control, Jetpack Compose previews, project structure, OkHttp/Ktor network capture, optional Maestro flow runner.",
   "repository": {
-    "url": "https://github.com/Yercko/devilge",
+    "url": "https://github.com/yercko/devilge",
     "source": "github"
   },
   "version": "0.2.1",
