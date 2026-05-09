@@ -65,6 +65,14 @@ export const networkCallsToolDefinition = {
     'recommended to capture bodies). Sensitive headers (Authorization, Cookie, Set-Cookie, X-API-Key, ' +
     'etc.) are redacted automatically.',
   inputSchema: networkCallsInputSchema,
+  annotations: {
+    title: 'Inspect HTTP traffic',
+    readOnlyHint: true,
+    // Logcat is a moving target — repeated calls return different results.
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildNetworkCallsHandler(useCase: GetNetworkCallsUseCase) {

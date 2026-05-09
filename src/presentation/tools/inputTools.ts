@@ -35,6 +35,13 @@ export const inputTapToolDefinition = {
     'Prefer the higher-level `devilge_tap_text` (Phase 13) when available — it is more ' +
     'resilient to layout changes than raw coordinates.',
   inputSchema: inputTapInputSchema,
+  annotations: {
+    title: 'Tap at device coordinates',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildInputTapHandler(useCase: InputTapUseCase) {
   return async (args: { serial?: string; x: number; y: number }) => {
@@ -72,6 +79,13 @@ export const inputTextToolDefinition = {
     'Types the given text into whatever field currently has focus on the device ' +
     '(`adb shell input text`). Spaces are escaped to %s by adb. NUL bytes and newlines are rejected.',
   inputSchema: inputTextInputSchema,
+  annotations: {
+    title: 'Type text into focused field',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildInputTextHandler(useCase: InputTextUseCase) {
   return async (args: { serial?: string; text: string }) => {
@@ -106,6 +120,13 @@ export const inputKeyToolDefinition = {
     'Sends a key event (`adb shell input keyevent KEYCODE_<NAME>`). Allowed keys: ' +
     `${ALLOWED_KEY_CODES.join(', ')}.`,
   inputSchema: inputKeyInputSchema,
+  annotations: {
+    title: 'Press a hardware/system key',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildInputKeyHandler(useCase: InputKeyUseCase) {
   return async (args: { serial?: string; code: AllowedKeyCode }) => {
@@ -148,6 +169,13 @@ export const inputSwipeToolDefinition = {
     'Sends a swipe gesture (`adb shell input swipe`) from (x1,y1) to (x2,y2) over `durationMs` ' +
     '(default 300). Useful for scrolling lists, dismissing overlays, performing simple gestures.',
   inputSchema: inputSwipeInputSchema,
+  annotations: {
+    title: 'Swipe between two coordinates',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildInputSwipeHandler(useCase: InputSwipeUseCase) {
   return async (args: {
@@ -196,6 +224,13 @@ export const setInputVisualizationToolDefinition = {
     'expected. Persists until the device reboots. Recommended: enable once at start of a ' +
     'driving session, disable when done.',
   inputSchema: setInputVisualizationInputSchema,
+  annotations: {
+    title: 'Toggle on-device input visualization',
+    readOnlyHint: false,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildSetInputVisualizationHandler(useCase: SetInputVisualizationUseCase) {
   return async (args: { serial?: string; enabled: boolean }) => {

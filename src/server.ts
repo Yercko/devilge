@@ -168,6 +168,13 @@ import {
   validateMaestroFlowToolDefinition,
   buildValidateMaestroFlowHandler,
 } from './presentation/tools/maestroTools.js';
+import {
+  batchToolName,
+  batchToolDefinition,
+  buildBatchToolHandler,
+  type BatchToolEntry,
+  type BatchSubHandler,
+} from './presentation/tools/batchTool.js';
 
 import { ABSOLUTE_LOGCAT_CAP_VALUE } from './config/Config.js';
 
@@ -261,7 +268,7 @@ export function createServer(config: Config, logger: Logger): McpServer {
   const server = new McpServer(
     {
       name: 'devilge',
-      version: '0.1.0',
+      version: '0.2.0',
     },
     {
       capabilities: {
@@ -274,93 +281,72 @@ export function createServer(config: Config, logger: Logger): McpServer {
     },
   );
 
-  server.registerTool(
-    devicesToolName,
-    devicesToolDefinition,
-    buildDevicesToolHandler(listDevices),
-  );
+  // Registry shared with the batch tool. Populated as we register each tool
+  // below, so devilge_batch can dispatch by name at runtime.
+  const batchRegistry = new Map<string, BatchToolEntry>();
 
-  server.registerTool(
-    logcatToolName,
-    logcatToolDefinition,
-    buildLogcatToolHandler(getLogcat),
-  );
+  // Wrapper that registers a tool with McpServer AND mirrors the entry into
+  // the batch registry. The cast on `definition`/`handler` is intentional:
+  // each tool has its own input shape, but at the registry level we need a
+  // common erased type. Per-call validation happens inside the batch handler.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const register = (name: string, definition: any, handler: any): void => {
+    server.registerTool(name, definition, handler);
+    batchRegistry.set(name, {
+      inputSchema: definition.inputSchema ?? {},
+      handler: handler as BatchSubHandler,
+    });
+  };
 
-  server.registerTool(
-    listPreviewsToolName,
-    listPreviewsToolDefinition,
-    buildListPreviewsHandler(listPreviews),
-  );
+  register(devicesToolName, devicesToolDefinition, buildDevicesToolHandler(listDevices));
+  register(logcatToolName, logcatToolDefinition, buildLogcatToolHandler(getLogcat));
+  register(listPreviewsToolName, listPreviewsToolDefinition, buildListPreviewsHandler(listPreviews));
+  register(getPreviewSourceToolName, getPreviewSourceToolDefinition, buildGetPreviewSourceHandler(getPreviewSource));
+  register(projectStructureToolName, projectStructureToolDefinition, buildProjectStructureHandler(getProjectStructure));
+  register(previewsTreeToolName, previewsTreeToolDefinition, buildPreviewsTreeHandler(getPreviewsTree));
+  register(networkCallsToolName, networkCallsToolDefinition, buildNetworkCallsHandler(getNetworkCalls));
+  register(resizeLogcatBufferToolName, resizeLogcatBufferToolDefinition, buildResizeLogcatBufferHandler(resizeLogcatBuffer));
+  register(runGradleTaskToolName, runGradleTaskToolDefinition, buildRunGradleTaskHandler(runGradleTask));
+  register(appErrorsToolName, appErrorsToolDefinition, buildAppErrorsHandler(getAppErrors));
+  register(inspectPackagesToolName, inspectPackagesToolDefinition, buildInspectPackagesHandler(inspectPackages));
+  register(takeScreenshotToolName, takeScreenshotToolDefinition, buildTakeScreenshotHandler(takeScreenshot));
+  register(dumpUiToolName, dumpUiToolDefinition, buildDumpUiHandler(dumpUi));
+  register(inputTapToolName, inputTapToolDefinition, buildInputTapHandler(inputTap));
+  register(inputTextToolName, inputTextToolDefinition, buildInputTextHandler(inputText));
+  register(inputKeyToolName, inputKeyToolDefinition, buildInputKeyHandler(inputKey));
+  register(inputSwipeToolName, inputSwipeToolDefinition, buildInputSwipeHandler(inputSwipe));
+  register(setInputVisualizationToolName, setInputVisualizationToolDefinition, buildSetInputVisualizationHandler(setInputVisualization));
+  register(tapTextToolName, tapTextToolDefinition, buildTapByTextHandler(tapByText));
+  register(tapResourceIdToolName, tapResourceIdToolDefinition, buildTapByResourceIdHandler(tapByResourceId));
+  register(setTextToolName, setTextToolDefinition, buildSetTextHandler(setText));
+  register(waitForTextToolName, waitForTextToolDefinition, buildWaitForTextHandler(waitForText));
+  register(waitForResourceIdToolName, waitForResourceIdToolDefinition, buildWaitForResourceIdHandler(waitForResourceId));
+  register(waitForIdleToolName, waitForIdleToolDefinition, buildWaitForIdleHandler(waitForIdle));
+  register(launchAppToolName, launchAppToolDefinition, buildLaunchAppHandler(launchApp));
+  register(forceStopAppToolName, forceStopAppToolDefinition, buildForceStopAppHandler(forceStopApp));
+  register(clearAppDataToolName, clearAppDataToolDefinition, buildClearAppDataHandler(clearAppData));
+  register(runInstrumentedTestsToolName, runInstrumentedTestsToolDefinition, buildRunInstrumentedTestsHandler(runInstrumentedTests));
+  register(installApkToolName, installApkToolDefinition, buildInstallApkHandler(installApk));
+  register(runMaestroFlowToolName, runMaestroFlowToolDefinition, buildRunMaestroFlowHandler(runMaestroFlow));
+  register(listMaestroFlowsToolName, listMaestroFlowsToolDefinition, buildListMaestroFlowsHandler(listMaestroFlows));
+  register(validateMaestroFlowToolName, validateMaestroFlowToolDefinition, buildValidateMaestroFlowHandler(validateMaestroFlow));
 
+  // The batch tool itself goes through `server.registerTool` directly and is
+  // NOT mirrored into `batchRegistry`. The handler captures `batchRegistry`
+  // by reference, so it sees every tool registered above when invoked, but
+  // it cannot invoke itself (the recursion guard rejects it explicitly).
+  //
+  // The cast erases the structural mismatch between our internal ContentItem
+  // type (loose to allow forwarding sub-tool content) and the SDK's strict
+  // CallToolResult content union. In practice every sub-handler returns
+  // either { type: 'text', text } or one of the SDK-recognized shapes, so the
+  // batch output is always a valid concatenation.
   server.registerTool(
-    getPreviewSourceToolName,
-    getPreviewSourceToolDefinition,
-    buildGetPreviewSourceHandler(getPreviewSource),
+    batchToolName,
+    batchToolDefinition,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    buildBatchToolHandler(batchRegistry) as any,
   );
-
-  server.registerTool(
-    projectStructureToolName,
-    projectStructureToolDefinition,
-    buildProjectStructureHandler(getProjectStructure),
-  );
-
-  server.registerTool(
-    previewsTreeToolName,
-    previewsTreeToolDefinition,
-    buildPreviewsTreeHandler(getPreviewsTree),
-  );
-
-  server.registerTool(
-    networkCallsToolName,
-    networkCallsToolDefinition,
-    buildNetworkCallsHandler(getNetworkCalls),
-  );
-
-  server.registerTool(
-    resizeLogcatBufferToolName,
-    resizeLogcatBufferToolDefinition,
-    buildResizeLogcatBufferHandler(resizeLogcatBuffer),
-  );
-
-  server.registerTool(
-    runGradleTaskToolName,
-    runGradleTaskToolDefinition,
-    buildRunGradleTaskHandler(runGradleTask),
-  );
-
-  server.registerTool(
-    appErrorsToolName,
-    appErrorsToolDefinition,
-    buildAppErrorsHandler(getAppErrors),
-  );
-
-  server.registerTool(
-    inspectPackagesToolName,
-    inspectPackagesToolDefinition,
-    buildInspectPackagesHandler(inspectPackages),
-  );
-
-  server.registerTool(takeScreenshotToolName, takeScreenshotToolDefinition, buildTakeScreenshotHandler(takeScreenshot));
-  server.registerTool(dumpUiToolName, dumpUiToolDefinition, buildDumpUiHandler(dumpUi));
-  server.registerTool(inputTapToolName, inputTapToolDefinition, buildInputTapHandler(inputTap));
-  server.registerTool(inputTextToolName, inputTextToolDefinition, buildInputTextHandler(inputText));
-  server.registerTool(inputKeyToolName, inputKeyToolDefinition, buildInputKeyHandler(inputKey));
-  server.registerTool(inputSwipeToolName, inputSwipeToolDefinition, buildInputSwipeHandler(inputSwipe));
-  server.registerTool(setInputVisualizationToolName, setInputVisualizationToolDefinition, buildSetInputVisualizationHandler(setInputVisualization));
-  server.registerTool(tapTextToolName, tapTextToolDefinition, buildTapByTextHandler(tapByText));
-  server.registerTool(tapResourceIdToolName, tapResourceIdToolDefinition, buildTapByResourceIdHandler(tapByResourceId));
-  server.registerTool(setTextToolName, setTextToolDefinition, buildSetTextHandler(setText));
-  server.registerTool(waitForTextToolName, waitForTextToolDefinition, buildWaitForTextHandler(waitForText));
-  server.registerTool(waitForResourceIdToolName, waitForResourceIdToolDefinition, buildWaitForResourceIdHandler(waitForResourceId));
-  server.registerTool(waitForIdleToolName, waitForIdleToolDefinition, buildWaitForIdleHandler(waitForIdle));
-  server.registerTool(launchAppToolName, launchAppToolDefinition, buildLaunchAppHandler(launchApp));
-  server.registerTool(forceStopAppToolName, forceStopAppToolDefinition, buildForceStopAppHandler(forceStopApp));
-  server.registerTool(clearAppDataToolName, clearAppDataToolDefinition, buildClearAppDataHandler(clearAppData));
-  server.registerTool(runInstrumentedTestsToolName, runInstrumentedTestsToolDefinition, buildRunInstrumentedTestsHandler(runInstrumentedTests));
-  server.registerTool(installApkToolName, installApkToolDefinition, buildInstallApkHandler(installApk));
-  server.registerTool(runMaestroFlowToolName, runMaestroFlowToolDefinition, buildRunMaestroFlowHandler(runMaestroFlow));
-  server.registerTool(listMaestroFlowsToolName, listMaestroFlowsToolDefinition, buildListMaestroFlowsHandler(listMaestroFlows));
-  server.registerTool(validateMaestroFlowToolName, validateMaestroFlowToolDefinition, buildValidateMaestroFlowHandler(validateMaestroFlow));
 
   logger.info('devilge MCP server constructed', {
     androidProjectRoot: config.androidProjectRoot,
@@ -398,6 +384,7 @@ export function createServer(config: Config, logger: Logger): McpServer {
       runMaestroFlowToolName,
       listMaestroFlowsToolName,
       validateMaestroFlowToolName,
+      batchToolName,
     ],
   });
 

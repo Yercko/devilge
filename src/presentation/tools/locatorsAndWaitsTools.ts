@@ -40,6 +40,13 @@ export const tapTextToolDefinition = {
     'matches, and taps its bounds center. Errors when 0 or >1 matches — the caller must ' +
     'disambiguate with a more specific text or use `contains` for substring match.',
   inputSchema: tapTextInputSchema,
+  annotations: {
+    title: 'Tap node by visible text',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildTapByTextHandler(useCase: TapByTextUseCase) {
   return async (args: { serial?: string; text: string; contains?: boolean }) => {
@@ -76,6 +83,13 @@ export const tapResourceIdToolDefinition = {
     'Like devilge_tap_text but matches by `resource-id`. More stable across copy/locale changes ' +
     'than text matching when the project uses Modifier.testTag.',
   inputSchema: tapResourceIdInputSchema,
+  annotations: {
+    title: 'Tap node by resource id',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildTapByResourceIdHandler(useCase: TapByResourceIdUseCase) {
   return async (args: { serial?: string; id: string }) => {
@@ -116,6 +130,13 @@ export const setTextToolDefinition = {
     'Heuristic: focused EditText → contentDescription match → text match → EditText after a label TextView. ' +
     'Returns the matched field summary.',
   inputSchema: setTextInputSchema,
+  annotations: {
+    title: 'Find input field by label and type into it',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildSetTextHandler(useCase: SetTextUseCase) {
   return async (args: { serial?: string; label: string; value: string }) => {
@@ -152,6 +173,13 @@ export const waitForTextToolDefinition = {
     'timeout elapses. Returns `{matched, attempts, elapsedMs, matchedNode?}`. Never throws — the ' +
     'caller branches on `matched`.',
   inputSchema: waitForTextInputSchema,
+  annotations: {
+    title: 'Wait until text appears on screen',
+    readOnlyHint: true,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 export function buildWaitForTextHandler(useCase: WaitForTextUseCase) {
   return async (args: { serial?: string; text: string; contains?: boolean; timeoutMs?: number }) => {
@@ -184,6 +212,13 @@ export const waitForResourceIdToolDefinition = {
   description:
     'Polls the UI dump until a node with the given resource-id appears, or timeout.',
   inputSchema: waitForResourceIdInputSchema,
+  annotations: {
+    title: 'Wait until a resource-id appears on screen',
+    readOnlyHint: true,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 export function buildWaitForResourceIdHandler(useCase: WaitForResourceIdUseCase) {
   return async (args: { serial?: string; id: string; timeoutMs?: number }) => {
@@ -223,6 +258,13 @@ export const waitForIdleToolDefinition = {
     'or the timeout elapses. Useful between a tap and the next action to absorb animations / ' +
     'asynchronous updates without sleeps.',
   inputSchema: waitForIdleInputSchema,
+  annotations: {
+    title: 'Wait until the UI settles',
+    readOnlyHint: true,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 export function buildWaitForIdleHandler(useCase: WaitForIdleUseCase) {
   return async (args: { serial?: string; timeoutMs?: number; stableSamples?: number }) => {

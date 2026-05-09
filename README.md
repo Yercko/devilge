@@ -2,7 +2,7 @@
 
 > Model Context Protocol (MCP) server that lets an AI assistant — typically Claude — develop, drive, and observe an Android / KMM app end-to-end.
 
-`devilge` exposes 31 tools that cover the full inner loop: read the project, build it, install it, launch it, drive its UI, capture errors and network traffic, run tests. Anything an LLM coding agent would otherwise have to ask the user to do manually.
+`devilge` exposes 33 tools that cover the full inner loop: read the project, build it, install it, launch it, drive its UI, capture errors and network traffic, run tests. Anything an LLM coding agent would otherwise have to ask the user to do manually.
 
 ## What's inside
 
@@ -14,9 +14,31 @@
 | **Locators + waits** (6) | `tap_text`, `tap_resource_id`, `set_text`, `wait_for_text`, `wait_for_resource_id`, `wait_for_idle` | Semantic UI navigation, no coordinate magic |
 | **Lifecycle** (5) | `launch_app`, `force_stop_app`, `clear_app_data`, `install_apk`, `run_instrumented_tests` | Cold-start app, run Espresso tests, fast install |
 | **Maestro flows (optional)** (3) | `run_maestro_flow`, `list_maestro_flows`, `validate_maestro_flow` | Reusable YAML flows for recurring navigation |
+| **Composition** (1) | `batch` | Chain multiple devilge tools in one round trip |
 | **Misc** (1) | `get_compose_previews_tree` (hierarchical) | — |
 
-177 unit tests in Vitest, all green. Strict TypeScript (`strict`, `noUncheckedIndexedAccess`).
+215 unit tests in Vitest, all green. Strict TypeScript (`strict`, `noUncheckedIndexedAccess`).
+
+### Batching for fewer permission prompts
+
+Hosts that confirm every tool call (Claude Desktop, Cowork) can become noisy when the agent walks through multi-step UI flows. `devilge_batch` collapses a sequence into a single MCP call so the user approves once for the whole sequence.
+
+```jsonc
+// Tap "Settings", wait, screenshot, tap a row, screenshot — one approval.
+{
+  "actions": [
+    { "name": "devilge_tap_text",       "input": { "text": "Settings" } },
+    { "name": "devilge_wait_for_idle",  "input": { "timeoutMs": 5000 } },
+    { "name": "devilge_take_screenshot" },
+    { "name": "devilge_tap_text",       "input": { "text": "Wallpaper & style" } },
+    { "name": "devilge_take_screenshot" }
+  ]
+}
+```
+
+Rules: capped at 20 actions per call; cannot be nested; cannot include destructive tools (`devilge_clear_app_data`, `devilge_install_apk`) — those always require their own dedicated prompt; stops on the first error and reports which step failed.
+
+All tools also expose MCP `annotations` (`readOnlyHint`, `idempotentHint`, `destructiveHint`, `openWorldHint`). Hosts that respect annotations can auto-approve safe reads and prompt only on state-changing tools.
 
 ## Architecture
 

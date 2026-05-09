@@ -30,6 +30,13 @@ export const listPreviewsToolDefinition = {
     'Statically scans the configured Android/KMM project for Jetpack Compose @Preview ' +
     'functions and returns their locations plus parsed annotation parameters.',
   inputSchema: listPreviewsInputSchema,
+  annotations: {
+    title: 'List @Preview composables',
+    readOnlyHint: true,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildListPreviewsHandler(useCase: ListComposePreviewsUseCase) {
@@ -73,6 +80,13 @@ export const getPreviewSourceToolDefinition = {
   description:
     'Returns the full source code of a @Preview composable, including its annotations and body.',
   inputSchema: getPreviewSourceInputSchema,
+  annotations: {
+    title: 'Get @Preview source code',
+    readOnlyHint: true,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildGetPreviewSourceHandler(useCase: GetComposePreviewSourceUseCase) {
@@ -126,6 +140,13 @@ export const previewsTreeToolDefinition = {
     'same Composable are grouped as variants of one function. Includes a totals ' +
     'summary by `group` and an `orphans` bucket for previews outside any known module.',
   inputSchema: previewsTreeInputSchema,
+  annotations: {
+    title: 'Compose previews — hierarchical tree',
+    readOnlyHint: true,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildPreviewsTreeHandler(useCase: GetComposePreviewsTreeUseCase) {

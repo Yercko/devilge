@@ -8,6 +8,13 @@ export const devicesToolDefinition = {
   description:
     'Lists every Android device or emulator currently visible to ADB on this machine.',
   inputSchema: {},
+  annotations: {
+    title: 'List Android devices',
+    readOnlyHint: true,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildDevicesToolHandler(useCase: ListDevicesUseCase) {

@@ -56,6 +56,15 @@ export const launchAppToolDefinition = {
     'arbitrary URI handled by the app. With `activity`, targets a specific component. Without either, ' +
     'devilge resolves the launcher activity automatically (falls back to `monkey` if resolution fails).',
   inputSchema: launchAppInputSchema,
+  annotations: {
+    title: 'Launch the app',
+    readOnlyHint: false,
+    idempotentHint: false,
+    // launch_app with clean=true wipes app data — the destructive path is
+    // gated by a non-default boolean flag, but the hint is conservative.
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildLaunchAppHandler(useCase: LaunchAppUseCase) {
   return async (args: {
@@ -95,6 +104,14 @@ export const forceStopAppToolDefinition = {
     'Runs `am force-stop <pkg>` — kills every process of the given app. Useful before relaunch to ensure ' +
     'a cold start, or when an app is hung.',
   inputSchema: forceStopAppInputSchema,
+  annotations: {
+    title: 'Force-stop an app',
+    readOnlyHint: false,
+    idempotentHint: true,
+    // Reversible: user can simply relaunch the app. Not destructive.
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildForceStopAppHandler(useCase: ForceStopAppUseCase) {
   return async (args: { serial?: string; packageName: string }) => {
@@ -126,6 +143,13 @@ export const clearAppDataToolDefinition = {
     'tokens. The app behaves like a fresh install on next launch. **DESTRUCTIVE.** Recommended only ' +
     'on dev emulators or wiped test devices, never on personal devices with logged-in apps.',
   inputSchema: clearAppDataInputSchema,
+  annotations: {
+    title: 'Wipe app data (DESTRUCTIVE)',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: true,
+    openWorldHint: true,
+  },
 };
 export function buildClearAppDataHandler(useCase: ClearAppDataUseCase) {
   return async (args: { serial?: string; packageName: string }) => {
@@ -191,6 +215,13 @@ export const runInstrumentedTestsToolDefinition = {
     '(success, JUnit-parsed `testResults`, compile errors, build failures, raw output tail). Reuses ' +
     'the existing JUnitXmlParser to read androidTest results.',
   inputSchema: runInstrumentedTestsInputSchema,
+  annotations: {
+    title: 'Run Espresso/UI instrumented tests',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildRunInstrumentedTestsHandler(useCase: RunInstrumentedTestsUseCase) {
   return async (args: {
@@ -252,6 +283,16 @@ export const installApkToolDefinition = {
     'workflow: assemble once with `run_gradle_task assembleDebug`, then re-install with this tool on each ' +
     'iteration — saves the Gradle configuration overhead each time.',
   inputSchema: installApkInputSchema,
+  annotations: {
+    title: 'Install APK on device (fast)',
+    readOnlyHint: false,
+    idempotentHint: false,
+    // Installing an APK is a security-sensitive action: it places a binary
+    // on the device and can replace existing apps. Marked destructive so
+    // clients always prompt the user.
+    destructiveHint: true,
+    openWorldHint: true,
+  },
 };
 export function buildInstallApkHandler(useCase: InstallApkUseCase) {
   return async (args: { serial?: string; apkPath?: string; module?: string; variant?: string }) => {

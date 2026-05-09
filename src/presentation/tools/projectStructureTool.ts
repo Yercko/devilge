@@ -9,6 +9,13 @@ export const projectStructureToolDefinition = {
     'Returns a high-level snapshot of the configured Android/KMM Gradle project: ' +
     'modules, types (android-app / kmm-shared / library), source sets, and key versions.',
   inputSchema: {},
+  annotations: {
+    title: 'Describe project structure',
+    readOnlyHint: true,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildProjectStructureHandler(useCase: GetProjectStructureUseCase) {
