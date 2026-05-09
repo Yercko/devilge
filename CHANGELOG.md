@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-05-09
+
+### Changed
+
+- Added `mcpName: "io.github.yercko/devilge"` to `package.json` and a top-level
+  `server.json` describing the package for the
+  [MCP Registry](https://registry.modelcontextprotocol.io/). This is the
+  ownership-verification marker the registry uses to confirm the npm package
+  belongs to the listed server. No functional change.
+
 ## [0.2.0] - 2026-05-08
 
 ### Added
@@ -78,6 +88,7 @@ Initial public release.
 
 - 202 unit tests covering parsers, sanitizers, use cases, and adapters.
 
+[0.2.1]: https://github.com/yercko/devilge/releases/tag/v0.2.1
 [0.2.0]: https://github.com/yercko/devilge/releases/tag/v0.2.0
 [0.1.1]: https://github.com/yercko/devilge/releases/tag/v0.1.1
 [0.1.0]: https://github.com/yercko/devilge/releases/tag/v0.1.0

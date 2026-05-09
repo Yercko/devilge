@@ -1,0 +1,78 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.yercko/devilge",
+  "description": "MCP server that exposes Android/KMM project insights to AI assistants like Claude: logcat, app errors, ADB device control, Jetpack Compose previews, project structure, OkHttp/Ktor network capture, optional Maestro flow runner.",
+  "repository": {
+    "url": "https://github.com/Yercko/devilge",
+    "source": "github"
+  },
+  "version": "0.2.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "devilge",
+      "version": "0.2.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "DEVILGE_ANDROID_PROJECT_ROOT",
+          "description": "Absolute path to the Android/KMM project root that devilge inspects (Gradle modules, source files, build outputs).",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "DEVILGE_OUTPUTS_ROOT",
+          "description": "Directory where devilge writes screenshots and UI dumps. Defaults to <projectRoot>/.devilge-outputs/.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "DEVILGE_DEFAULT_DEVICE_SERIAL",
+          "description": "Default ADB serial used when a tool does not specify one. Useful when several devices/emulators are attached.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "DEVILGE_FLOWS_ROOT",
+          "description": "Directory containing Maestro YAML flows. Defaults to <projectRoot>/devilge-flows/.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "DEVILGE_MAESTRO_BIN_PATH",
+          "description": "Absolute path to the Maestro binary. If unset, devilge resolves it from PATH; if absent, Maestro tools degrade gracefully.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "DEVILGE_ALLOW_FLOW_SCRIPTS",
+          "description": "Set to 'true' to allow Maestro flows containing 'runScript:' blocks. Default is false; flows with scripts are rejected.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "DEVILGE_HTTP_LOG_TAGS",
+          "description": "Comma-separated logcat tags scanned for HTTP traffic. Defaults to 'HttpClient,OkHttp' (covers Ktor + OkHttp/Retrofit).",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "DEVILGE_HTTP_LOG_FORMAT",
+          "description": "HTTP log parser to use: 'auto' (default), 'ktor', or 'okhttp'.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

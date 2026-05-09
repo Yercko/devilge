@@ -1,6 +1,7 @@
 {
   "name": "devilge",
-  "version": "0.2.0",
+  "version": "0.2.1",
+  "mcpName": "io.github.yercko/devilge",
   "description": "MCP server that exposes Android project insights (logcat, Jetpack Compose previews, project structure) to AI assistants like Claude.",
   "type": "module",
   "main": "dist/index.js",
