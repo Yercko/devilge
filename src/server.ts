@@ -268,7 +268,7 @@ export function createServer(config: Config, logger: Logger): McpServer {
   const server = new McpServer(
     {
       name: 'devilge',
-      version: '0.2.0',
+      version: '0.2.1',
     },
     {
       capabilities: {
