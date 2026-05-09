@@ -4,6 +4,10 @@
 
 `devilge` exposes 33 tools that cover the full inner loop: read the project, build it, install it, launch it, drive its UI, capture errors and network traffic, run tests. Anything an LLM coding agent would otherwise have to ask the user to do manually.
 
+<p align="center">
+  <img src="docs/video.gif" alt="devilge demo" width="560" />
+</p>
+
 ## What's inside
 
 | Category | Tools | Purpose |
