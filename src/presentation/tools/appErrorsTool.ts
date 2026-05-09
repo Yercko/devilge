@@ -57,6 +57,13 @@ export const appErrorsToolDefinition = {
     'common Android system noise (Choreographer, OpenGLRenderer, etc.). Returns empty if the app ' +
     'is not running.',
   inputSchema: appErrorsInputSchema,
+  annotations: {
+    title: 'Get app errors (curated)',
+    readOnlyHint: true,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildAppErrorsHandler(useCase: GetAppErrorsUseCase) {

@@ -37,6 +37,15 @@ export const logcatToolDefinition = {
     'Reads recent logcat output from a connected Android device or emulator using adb. ' +
     'Useful for diagnosing crashes, ANRs, runtime errors, and tracing application logs.',
   inputSchema: logcatToolInputSchema,
+  annotations: {
+    title: 'Read Android logcat',
+    readOnlyHint: true,
+    // Logcat is a tail of a mutable buffer — calling it twice may return
+    // different entries even with identical args. Hence not idempotent.
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildLogcatToolHandler(useCase: GetLogcatUseCase) {

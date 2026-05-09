@@ -27,6 +27,16 @@ export const takeScreenshotToolDefinition = {
     'under the configured outputs directory. Returns the absolute path so the LLM client ' +
     'can read the image. Default outputs root: `<projectRoot>/.devilge-outputs/screenshots/`.',
   inputSchema: takeScreenshotInputSchema,
+  annotations: {
+    title: 'Capture device screenshot',
+    // Reads the framebuffer; the only side effect is writing a PNG to the
+    // configured outputs directory (already inside a path the user opted in
+    // to). Treat as readOnly from the user's perspective.
+    readOnlyHint: true,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildTakeScreenshotHandler(useCase: TakeScreenshotUseCase) {
@@ -69,6 +79,13 @@ export const dumpUiToolDefinition = {
     'tree of nodes (text, resourceId, contentDescription, bounds, clickable, etc.). Useful for ' +
     'finding elements by text/ID before tapping, or for reasoning about layout state.',
   inputSchema: dumpUiInputSchema,
+  annotations: {
+    title: 'Dump current UI hierarchy',
+    readOnlyHint: true,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildDumpUiHandler(useCase: DumpUiUseCase) {

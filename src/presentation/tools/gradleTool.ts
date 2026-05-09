@@ -43,6 +43,15 @@ export const runGradleTaskToolDefinition = {
     'errors (kotlinc/javac/kapt/ksp), JUnit test results from build/test-results, ' +
     'Android Lint findings, "What went wrong" failure blocks, plus the tail of stdout/stderr.',
   inputSchema: runGradleTaskInputSchema,
+  annotations: {
+    title: 'Run a Gradle task',
+    readOnlyHint: false,
+    // Some Gradle tasks (assemble, test) are not idempotent in time and may
+    // produce different outputs depending on caches and inputs.
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 
 export function buildRunGradleTaskHandler(useCase: RunGradleTaskUseCase) {

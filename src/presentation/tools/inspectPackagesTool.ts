@@ -34,6 +34,13 @@ export const inspectPackagesToolDefinition = {
     'For each match, reports whether a process is currently running and its PID. ' +
     'Use this to discover the right `packageName` value before calling devilge_get_app_errors.',
   inputSchema: inspectPackagesInputSchema,
+  annotations: {
+    title: 'Inspect installed packages',
+    readOnlyHint: true,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 
 export function buildInspectPackagesHandler(useCase: InspectPackagesUseCase) {

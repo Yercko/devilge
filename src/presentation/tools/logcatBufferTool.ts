@@ -26,6 +26,13 @@ export const resizeLogcatBufferToolDefinition = {
     'within seconds. Applies to subsequent captures only — entries already lost are gone. ' +
     'Recommended whenever Ktor LogLevel.ALL produces dozens of lines per request.',
   inputSchema: resizeLogcatBufferInputSchema,
+  annotations: {
+    title: 'Resize logcat ring buffer',
+    readOnlyHint: false,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 
 export function buildResizeLogcatBufferHandler(useCase: ResizeLogcatBufferUseCase) {

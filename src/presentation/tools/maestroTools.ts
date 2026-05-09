@@ -36,6 +36,13 @@ export const runMaestroFlowToolDefinition = {
     '`params` injected as -e KEY=VALUE. `runScript:` blocks in the YAML are denied by default; set ' +
     'DEVILGE_ALLOW_FLOW_SCRIPTS=true to allow. MAESTRO_DISABLE_ANALYTICS is always injected.',
   inputSchema: runMaestroFlowInputSchema,
+  annotations: {
+    title: 'Run a Maestro flow',
+    readOnlyHint: false,
+    idempotentHint: false,
+    destructiveHint: false,
+    openWorldHint: true,
+  },
 };
 export function buildRunMaestroFlowHandler(useCase: RunMaestroFlowUseCase) {
   return async (args: { name: string; params?: Record<string, string> }) => {
@@ -64,6 +71,13 @@ export const listMaestroFlowsToolDefinition = {
     'size and a 5-line preview. Works WITHOUT Maestro installed — useful to see what reusable flows ' +
     'exist before deciding whether to invest in installing Maestro.',
   inputSchema: listMaestroFlowsInputSchema,
+  annotations: {
+    title: 'List available Maestro flows',
+    readOnlyHint: true,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 export function buildListMaestroFlowsHandler(useCase: ListMaestroFlowsUseCase) {
   return async () => {
@@ -96,6 +110,13 @@ export const validateMaestroFlowToolDefinition = {
     'Maestro — works without the binary installed. Use this before run_maestro_flow to surface ' +
     'syntactic problems quickly.',
   inputSchema: validateMaestroFlowInputSchema,
+  annotations: {
+    title: 'Validate a Maestro flow YAML',
+    readOnlyHint: true,
+    idempotentHint: true,
+    destructiveHint: false,
+    openWorldHint: false,
+  },
 };
 export function buildValidateMaestroFlowHandler(useCase: ValidateMaestroFlowUseCase) {
   return async (args: { name: string }) => {
